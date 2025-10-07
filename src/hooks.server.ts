@@ -24,6 +24,9 @@ export const handle = (async ({ event, resolve }) => {
             
             // Sessione valida: imposta l'UID nell'oggetto locals
             event.locals.userID = decodedClaims.uid;
+            event.locals.isAdmin = decodedClaims.admin ?? false;
+                console.log("isAdmin", event.locals.isAdmin, decodedClaims)
+
         } catch (e) {
             // Sessione non valida o scaduta: elimina il cookie non valido
             event.cookies.delete("__session", { path: '/' });

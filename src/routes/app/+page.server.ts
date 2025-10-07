@@ -6,6 +6,7 @@ import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
+    console.log("---- page server di app")
     const userID = locals.userID;
 
     // Controllo di Autorizzazione: L'autenticazione è già stata verificata nell'hook, 
@@ -19,8 +20,8 @@ export const load: PageServerLoad = async ({ locals }) => {
     try {
         // Recupero del profilo utente utilizzando l'UID validato come ID del documento
         // [1]
-        const docRef = adminFirestore.collection('user_profiles').doc(userID);
-        const doc = await docRef.get(); // [27]
+        const docRef = adminFirestore.collection('users').doc(userID);
+        const doc = await docRef.get();
 
         if (doc.exists) {
             // Ritorna l'oggetto serializzabile al componente Svelte per l'idratazione

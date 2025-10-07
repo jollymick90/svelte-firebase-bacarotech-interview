@@ -1,6 +1,4 @@
-import {
-  env,
-} from '$env/dynamic/private'; // Assicurarsi che SvelteKit carichi variabili private
+import { env } from '$env/dynamic/private';
 import {
   cert,
   getApps,
@@ -9,16 +7,19 @@ import {
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 
-// La chiave di servizio viene parsata da una variabile d'ambiente stringa
 const serviceAccount = JSON.parse(env.FIREBASE_ADMIN_KEY);
 
+let defaultApp;
 if (!getApps().length) {
-    // Inizializza l'app di amministrazione con le credenziali di certificato
-    initializeApp({
+
+    defaultApp = initializeApp({
         credential: cert(serviceAccount),
     });
 }
 
-// Esporta i servizi amministrativi per l'uso in hooks e +server.ts
+if (!defaultApp) {
+  console.warn("Unknown default app");
+}
+
 export const adminAuth = getAuth();
 export const adminFirestore = getFirestore();

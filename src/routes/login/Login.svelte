@@ -3,15 +3,51 @@
   import { auth, googleProvider } from "$lib/firebase/firebase.client";
 
   import {
+    getAuth,
     signInWithEmailAndPassword,
     signInWithPopup,
     type UserCredential,
   } from "firebase/auth";
+  import { timeout } from "$lib/shared/utils";
+  import { goto } from "$app/navigation";
 
   let email = $state("");
   let password = $state("");
+  let message = $state("");
   let error: string | null = $state(null);
   let loading = $state(false);
+
+  async function handleSuccessfulAuth() {
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+
+    if (currentUser) {
+      // try {
+      const idToken = await currentUser.getIdToken(true);
+      const email = currentUser.email;
+      const response = await fetch("/api/sync-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idToken, email }),
+      });
+      
+      if (response.status >= 300 && response.status <= 308) {        
+        const locationHeader = response.headers.get("Location");
+
+        if (locationHeader) {
+          await goto(locationHeader);
+          //window.location.href = locationHeader;
+          return;
+        }
+      }
+      if (!response.ok) {
+        message = "User no Syncronized";
+      } else {
+        message = "user ok";
+        window.location.href = '/app';
+      }      
+    }
+  }
 
   async function exchangeTokenForCookie(userCredential: UserCredential) {
     const user = userCredential.user;
@@ -25,8 +61,7 @@
     });
 
     if (response.ok) {
-      // Sessione server impostata con successo, reindirizza
-      window.location.href = "/app/dashboard";
+      message = "User Sessions success";
     } else {
       const result = await response.json();
       error = result.message || "Errore nella creazione della sessione server.";
@@ -40,8 +75,12 @@
         auth,
         email,
         password
-      ); 
+      );
+
       await exchangeTokenForCookie(userCredential);
+      
+      await handleSuccessfulAuth();
+
     } catch (e) {
       console.error("Login Email/Password fallito:", e);
       error = "Credenziali non valide o errore di rete.";
@@ -50,26 +89,32 @@
     }
   }
 
-  // 2. Login con Google Provider (OAuth Popup)
   async function handleGoogleLogin() {
     loading = true;
     error = null;
     try {
-      const userCredential = await signInWithPopup(auth, googleProvider); // [25]
+      const userCredential = await signInWithPopup(auth, googleProvider);
+
       await exchangeTokenForCookie(userCredential);
+
+      await handleSuccessfulAuth();
+
     } catch (e) {
       console.error("Login Google fallito:", e);
       error = "Login annullato o errore del provider Google.";
     } finally {
       loading = false;
     }
+
   }
   function login() {
-    handleEmailPasswordLogin().then().catch();
+    handleEmailPasswordLogin().then()
+    .catch((e)=> {console.log("erro loginr", e)});
   }
 
   function googleLogin(): any {
-    handleGoogleLogin().then().catch();
+    handleGoogleLogin().then()
+    .catch((e)=> {console.log("error googleLogin", e)});
   }
   onMount(() => {});
 </script>
@@ -119,7 +164,9 @@
                 />
               </div>
             </div>
-
+            <div>
+              LOG: {message}
+            </div>
             <div>
               <button
                 type="submit"

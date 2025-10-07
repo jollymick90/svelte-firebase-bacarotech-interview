@@ -5,6 +5,7 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			userID: string | null; // UID dell'utente autenticato
+			isAdmin: boolean
 		}
 		// interface PageData {}
 		// interface PageState {}
