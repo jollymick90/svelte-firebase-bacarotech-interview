@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { auth, googleProvider } from "$lib/firebase/firebase.client";
+  import { authClient, googleProvider } from "$lib/firebase/firebase.client";
 
   import {
     getAuth,
@@ -73,7 +73,7 @@
     error = null;
     try {
       const userCredential = await signInWithEmailAndPassword(
-        auth,
+        authClient,
         email,
         password
       );
@@ -94,7 +94,7 @@
     loading = true;
     error = null;
     try {
-      const userCredential = await signInWithPopup(auth, googleProvider);
+      const userCredential = await signInWithPopup(authClient, googleProvider);
 
       await exchangeTokenForCookie(userCredential);
 

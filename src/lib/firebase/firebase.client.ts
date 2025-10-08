@@ -9,6 +9,8 @@ import {
   getAuth,
   GoogleAuthProvider,
 } from 'firebase/auth';
+import type { Firestore } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: env.PUBLIC_FIREBASE_ADMIN_KEY,
@@ -21,7 +23,7 @@ const firebaseConfig = {
 };
 let authInstance: ReturnType<typeof getAuth> | undefined;
 let googleProviderInstance: GoogleAuthProvider | undefined;
-
+let dbClient: Firestore | undefined;
 if (browser) {
   const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
@@ -31,7 +33,9 @@ if (browser) {
   googleProviderInstance.setCustomParameters({
     'login_hint': 'user@example.com'
   });
+  dbClient = getFirestore(app)
 }
-const auth = authInstance!;
+const authClient = authInstance!;
 const googleProvider = googleProviderInstance!;
-export { auth, googleProvider };
+
+export { authClient, dbClient, googleProvider };

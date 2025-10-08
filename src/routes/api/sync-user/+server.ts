@@ -45,7 +45,7 @@ export async function POST({ request }) {
     const userExists = doc.exists;
 
     const isAdmin = email && ADMIN_EMAILS_LIST.includes(email)
-    console.log("isAdmin", isAdmin)
+    
     if (verified && userExists) {
         return redirect(303, isAdmin ? '/app/admin' : '/app/home');
     }

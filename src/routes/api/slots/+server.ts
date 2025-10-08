@@ -1,5 +1,7 @@
 // src/routes/api/slots/+server.ts
 
+import { adminFirestore } from '$lib/server/admin';
+
 import { json } from '@sveltejs/kit';
 
 import type { RequestHandler } from './$types';
@@ -32,17 +34,14 @@ const speakerData: SpeakerDetails = {
     name: 'tizio',
     uid: 'abc123',
 };
-
-/**
- * Gestisce la richiesta GET per recuperare i dati degli slot fittizi.
- */
-export const GET: RequestHandler = async () => {
+const enableMock = false
+function mockSlot() {
     const today = new Date();
     const eventId = 'conf_2025_tech';
 
     // Array di slot per la demo
     const fakeSlots: InterviewSlot[] = [
-          // Slot 1: Disponibile
+        // Slot 1: Disponibile
         {
             id: generateFakeId(),
             eventId: eventId,
@@ -74,7 +73,7 @@ export const GET: RequestHandler = async () => {
             // Usa il secondo speaker (indice 1)
             speakerUid: speakerData.uid,
             speakerName: speakerData.name,
-            
+
             bookedAt: new Date().toISOString(),
         },
         // Slot 4: Disponibile (Più tardi)
@@ -96,4 +95,49 @@ export const GET: RequestHandler = async () => {
         total: fakeSlots.length,
         timestamp: new Date().toISOString()
     });
+}
+
+async function readFirebaseSlot() {
+    try {
+        const slotsSnapshot = await adminFirestore.collection('slots').get()
+
+        const slots = slotsSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+        return json(slots, { status: 200 });
+    } catch (e: any) {
+        return json({ error: 'Errore durante la lettura degli slot: ' + e.message }, { status: 500 });
+    }
+}
+/**
+ * Gestisce la richiesta GET per recuperare i dati degli slot fittizi.
+ */
+export const GET: RequestHandler = async () => {
+    if (enableMock)
+        return mockSlot();
+    else
+        return readFirebaseSlot();
 };
+
+export async function POST({ request }) {
+    const { name, time } = await request.json();
+
+    if (!name || !time) {
+        return json({ error: 'Nome e orario sono richiesti.' }, { status: 400 });
+    }
+
+    try {
+        const slotData = {
+            name,
+            time,
+            createdAt: new Date()
+        }
+        const slotDocRef = adminFirestore.collection('slots').doc();
+        await slotDocRef.set(slotData, { merge: true })
+
+        return json({ message: 'Slot aggiunto con successo!' }, { status: 201 });
+    } catch (e: any) {
+        return json({ error: 'Errore del server: ' + e.message }, { status: 500 });
+    }
+}
