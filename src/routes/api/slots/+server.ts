@@ -1,27 +1,13 @@
-// src/routes/api/slots/+server.ts
-
 import { adminFirestore } from '$lib/server/admin';
+import type {
+  InterviewSlot,
+  SpeakerDetails,
+} from '$lib/type/slots';
+import { v4 as uuidv4 } from 'uuid';
 
 import { json } from '@sveltejs/kit';
 
 import type { RequestHandler } from './$types';
-
-// 1. Definizione dei tipi per chiarezza
-interface SpeakerDetails {
-    uid: string;
-    name: string;
-}
-
-interface InterviewSlot {
-    id: string;
-    eventId: string;
-    startTime: string; // ISO String per i Timestamp
-    endTime: string;   // ISO String per i Timestamp
-    status: 'AVAILABLE' | 'BOOKED' | 'CANCELED';
-    speakerUid: string | null;
-    speakerName: string | null;
-    bookedAt: string | null;
-}
 
 // Funzione helper per generare un ID pseudo-casuale (simula l'UUID di Firestore)
 function generateFakeId(): string {
@@ -121,17 +107,31 @@ export const GET: RequestHandler = async () => {
 };
 
 export async function POST({ request }) {
-    const { name, time } = await request.json();
-
-    if (!name || !time) {
+    const { name, startTime, endTime } = await request.json();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (!name || !startTime || !endTime) {
         return json({ error: 'Nome e orario sono richiesti.' }, { status: 400 });
     }
+    
+    const [hoursStart, minutesStart] = startTime.split(':').map(Number);
+    const _startTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), hoursStart, minutesStart);
+
+    const [hoursEnd, minutesEnd] = endTime.split(':').map(Number);
+    const _endTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), hoursEnd, minutesEnd);
 
     try {
         const slotData = {
+            id: uuidv4(),
             name,
-            time,
-            createdAt: new Date()
+            startTime: _startTime,
+            endTime: _endTime,
+            status: 'AVAILABLE',
+            speakerUid: null,
+            speakerName: null,
+            bookedAt: null,
+            // Usiamo un timestamp del server per la coerenza TODO
+            createdAt: new Date().getTime()// admin.firestore.FieldValue.serverTimestamp()
         }
         const slotDocRef = adminFirestore.collection('slots').doc();
         await slotDocRef.set(slotData, { merge: true })

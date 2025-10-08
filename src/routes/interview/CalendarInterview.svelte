@@ -1,8 +1,9 @@
 <script lang="ts">
   import { fakeSlotFree } from "$lib/mock/fake-slot";
+  import type { InterviewSlot } from "$lib/type/slots";
   import CardSlot from "./CardSlot.svelte";
-
-  const slots = $state(fakeSlotFree);
+  const { slots }: { slots: InterviewSlot[]} = $props();
+  // const slots = $state(fakeSlotFree);
 </script>
 
 <ul role="list" class="overflow-hidden rounded-md bg-white shadow-sm">
