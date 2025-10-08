@@ -6,7 +6,8 @@ declare global {
 		interface Locals {
 			userID: string | null; // UID dell'utente autenticato
 			isAdmin: boolean;
-			name: string
+			name: string | undefined | null;
+			email: string | undefined;
 		}
 		// interface PageData {}
 		// interface PageState {}

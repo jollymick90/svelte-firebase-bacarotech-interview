@@ -11,7 +11,7 @@ import { json } from '@sveltejs/kit';
 export async function POST({ request, cookies, locals }) {
 
     const userID = locals.userID;
-    const name = locals.name;
+    const name = locals.name ?? locals.email;
     let requestBody;
     try {
         requestBody = await request.json();

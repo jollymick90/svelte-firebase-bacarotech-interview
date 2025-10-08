@@ -24,7 +24,8 @@ export const handle = (async ({ event, resolve }) => {
             
             event.locals.userID = decodedClaims.uid;
             event.locals.isAdmin = decodedClaims.admin ?? false;    
-            event.locals.name = decodedClaims.name;            
+            event.locals.name = decodedClaims.name;
+            event.locals.email = decodedClaims.email;          
 
         } catch (e) {
             // Sessione non valida o scaduta: elimina il cookie non valido
