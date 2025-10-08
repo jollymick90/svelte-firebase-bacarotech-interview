@@ -23,7 +23,8 @@ export const handle = (async ({ event, resolve }) => {
             const decodedClaims = await adminAuth.verifySessionCookie(sessionCookie);
             
             event.locals.userID = decodedClaims.uid;
-            event.locals.isAdmin = decodedClaims.admin ?? false;                
+            event.locals.isAdmin = decodedClaims.admin ?? false;    
+            event.locals.name = decodedClaims.name;            
 
         } catch (e) {
             // Sessione non valida o scaduta: elimina il cookie non valido

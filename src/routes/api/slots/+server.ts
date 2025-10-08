@@ -29,6 +29,7 @@ function mockSlot() {
     const fakeSlots: InterviewSlot[] = [
         // Slot 1: Disponibile
         {
+            docId: generateFakeId(),
             id: generateFakeId(),
             eventId: eventId,
             startTime: new Date(today.setHours(10, 30, 0, 0)).toISOString(),
@@ -40,6 +41,7 @@ function mockSlot() {
         },
         // Slot 2: Disponibile
         {
+            docId: generateFakeId(),
             id: generateFakeId(),
             eventId: eventId,
             startTime: new Date(today.setHours(11, 0, 0, 0)).toISOString(),
@@ -51,6 +53,7 @@ function mockSlot() {
         },
         // Slot 3: Prenotato
         {
+            docId: generateFakeId(),
             id: generateFakeId(),
             eventId: eventId,
             startTime: new Date(today.setHours(14, 0, 0, 0)).toISOString(),
@@ -64,6 +67,7 @@ function mockSlot() {
         },
         // Slot 4: Disponibile (Più tardi)
         {
+            docId: generateFakeId(),
             id: generateFakeId(),
             eventId: eventId,
             startTime: new Date(today.setHours(15, 0, 0, 0)).toISOString(),
@@ -87,9 +91,9 @@ async function readFirebaseSlot() {
     try {
         const slotsSnapshot = await adminFirestore.collection('slots').get()
 
-        const slots = slotsSnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
+        const slots = slotsSnapshot.docs.map(doc => ({            
+            ...doc.data(),
+            docId: doc.id
         }));
         return json(slots, { status: 200 });
     } catch (e: any) {

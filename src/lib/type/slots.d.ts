@@ -5,6 +5,7 @@ export interface SpeakerDetails {
 }
 
 export interface InterviewSlot {
+    docId: string;
     id: string;
     eventId: string;
     startTime: string; // ISO String per i Timestamp

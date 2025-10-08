@@ -1,6 +1,7 @@
 import { browser } from '$app/environment';
 import { env } from '$env/dynamic/public';
 import {
+  type FirebaseApp,
   getApp,
   getApps,
   initializeApp,
@@ -24,8 +25,9 @@ const firebaseConfig = {
 let authInstance: ReturnType<typeof getAuth> | undefined;
 let googleProviderInstance: GoogleAuthProvider | undefined;
 let dbClient: Firestore | undefined;
+let app: FirebaseApp | undefined;
 if (browser) {
-  const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
   authInstance = getAuth(app);
   googleProviderInstance = new GoogleAuthProvider();
@@ -38,4 +40,4 @@ if (browser) {
 const authClient = authInstance!;
 const googleProvider = googleProviderInstance!;
 
-export { authClient, dbClient, googleProvider };
+export { app, authClient, dbClient, googleProvider };
