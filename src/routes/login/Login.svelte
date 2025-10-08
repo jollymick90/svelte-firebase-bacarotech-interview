@@ -8,8 +8,9 @@
     signInWithPopup,
     type UserCredential,
   } from "firebase/auth";
-  import { timeout } from "$lib/shared/utils";
+
   import { goto } from "$app/navigation";
+  import Background from "$lib/shared/components/Background.svelte";
 
   let email = $state("");
   let password = $state("");
@@ -119,6 +120,7 @@
   onMount(() => {});
 </script>
 
+
 <div class="flex min-h-full">
   <div
     class="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24"
@@ -163,9 +165,6 @@
                   class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-primary-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-primary-500"
                 />
               </div>
-            </div>
-            <div>
-              LOG: {message}
             </div>
             <div>
               <button
