@@ -12,6 +12,7 @@ import {
 } from 'firebase/auth';
 import type { Firestore } from 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore';
+import { getMessaging, type Messaging } from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: env.PUBLIC_FIREBASE_ADMIN_KEY,
@@ -26,6 +27,8 @@ let authInstance: ReturnType<typeof getAuth> | undefined;
 let googleProviderInstance: GoogleAuthProvider | undefined;
 let dbClient: Firestore | undefined;
 let app: FirebaseApp | undefined;
+let messaging: Messaging | undefined;
+
 if (browser) {
   app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
@@ -36,8 +39,9 @@ if (browser) {
     'login_hint': 'user@example.com'
   });
   dbClient = getFirestore(app)
+  messaging = getMessaging(app);
 }
 const authClient = authInstance!;
 const googleProvider = googleProviderInstance!;
 
-export { app, authClient, dbClient, googleProvider };
+export { app, authClient, dbClient, googleProvider, messaging };
