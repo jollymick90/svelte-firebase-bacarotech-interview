@@ -15,7 +15,7 @@ import {
  */
 export async function POST({ request }) {
     // 1. Recupera il token ID dal corpo della richiesta
-    const { idToken, email } = await request.json();
+    const { idToken, email, fcmToken } = await request.json();
 
     if (!email) {
         return json({ success: false, error: 'Email non trovata' }, { status: 400 });
@@ -65,7 +65,8 @@ export async function POST({ request }) {
             email: decodedToken.email,
             displayName: decodedToken.name || decodedToken.email,
             createdAt: new Date().getTime(),//serverTimestamp(),
-            role: role, 
+            role: role,
+            fcmToken: fcmToken
         };
 
         await userDocRef.set(userData, { merge: true });

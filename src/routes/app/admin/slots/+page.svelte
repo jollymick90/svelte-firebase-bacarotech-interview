@@ -1,6 +1,5 @@
 <script lang="ts">
-  import type { InterviewSlot } from "$lib/type/slots";
-  import { onMount } from "svelte";
+  import ListSlot from "$lib/slots/ListSlot.svelte";
 
   let name = $state("free");
   let startTime = $state("");
@@ -8,14 +7,10 @@
   let loading = $state(false);
   let error = $state("");
   let success = $state("");
- let slotsJson = $state('');
+  let slotsJson = $state("");
   let populateLoading = $state(false);
-  let populateError = $state('');
-  let populateSuccess = $state('');
-
-  let slots = $state([] as InterviewSlot[]);
-  let slotsLoading = $state(true);
-  let slotsError = $state('');
+  let populateError = $state("");
+  let populateSuccess = $state("");
 
   async function addSlot() {
     loading = true;
@@ -29,7 +24,9 @@
     }
 
     if (startTime && !endTime) {
-      endTime = new Date(new Date(startTime).getTime() + (15 * 60 * 1000)).toTimeString();
+      endTime = new Date(
+        new Date(startTime).getTime() + 15 * 60 * 1000
+      ).toTimeString();
     }
 
     try {
@@ -48,7 +45,7 @@
         name = "";
         endTime = "";
         startTime = "";
-        await fetchSlots();
+        // await fetchSlots();
       } else {
         error = result.error;
       }
@@ -59,63 +56,41 @@
     }
   }
 
-
-  async function fetchSlots() {
-    slotsLoading = true;
-    slotsError = "";
-    try {
-      const response = await fetch("/api/slots");
-      if (response.ok) {
-        slots = await response.json();
-        slots.sort((a,b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime())
-      } else {
-        slotsError = "Errore nel caricamento degli slot.";
-      }
-    } catch (e: any) {
-      slotsError = "Errore di rete: " + e.message;
-    } finally {
-      slotsLoading = false;
-    }
-  }
   async function populateSlots() {
     populateLoading = true;
-    populateError = '';
-    populateSuccess = '';
+    populateError = "";
+    populateSuccess = "";
 
     try {
-      console.log(slotsJson)
       const parsedJson = JSON.parse(slotsJson);
-      
-      const response = await fetch('/api/slots/populate', {
-        method: 'POST',
+
+      const response = await fetch("/api/slots/populate", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(parsedJson)
+        body: JSON.stringify(parsedJson),
       });
-      
+
       const result = await response.json();
 
       if (response.ok) {
         populateSuccess = result.message;
-        slotsJson = '';
-        fetchSlots();
+        slotsJson = "";
+        // fetchSlots();
       } else {
         populateError = result.error;
       }
     } catch (e: any) {
       if (e instanceof SyntaxError) {
-        populateError = 'Errore: il JSON inserito non è valido.';
+        populateError = "Errore: il JSON inserito non è valido.";
       } else {
-        populateError = 'Errore di rete: ' + e.message;
+        populateError = "Errore di rete: " + e.message;
       }
     } finally {
       populateLoading = false;
     }
   }
-  onMount(() => {
-    fetchSlots();
-  });
 </script>
 
 <div class="container">
@@ -142,7 +117,7 @@
         bind:value={startTime}
         required
       />
-           <input
+      <input
         type="time"
         id="endTime"
         placeholder="E.g. 10:00"
@@ -173,16 +148,17 @@
     <div class="feedback error">{error}</div>
   {/if}
 
-
-  <hr class="my-8 border-t border-gray-300">
+  <hr class="my-8 border-t border-gray-300" />
 
   <section>
     <h2 class="text-xl font-bold mb-4">Popola slot in blocco</h2>
-    <p class="text-gray-600 mb-4">Incolla qui il JSON degli slot che vuoi aggiungere.</p>
+    <p class="text-gray-600 mb-4">
+      Incolla qui il JSON degli slot che vuoi aggiungere.
+    </p>
     <form onsubmit={populateSlots}>
       <div class="form-group">
         <label for="slots-json">JSON degli Slot</label>
-        <textarea id="slots-json" bind:value={slotsJson} ></textarea>
+        <textarea id="slots-json" bind:value={slotsJson}></textarea>
       </div>
       <button type="submit" disabled={populateLoading}>
         {#if populateLoading}
@@ -192,7 +168,7 @@
         {/if}
       </button>
     </form>
-    
+
     {#if populateSuccess}
       <div class="feedback success">{populateSuccess}</div>
     {/if}
@@ -201,25 +177,9 @@
     {/if}
   </section>
 
-  <hr class="my-8 border-t border-gray-300">
+  <hr class="my-8 border-t border-gray-300" />
 
-  <section class="slots-list">
-    <h2 class="text-xl font-bold mb-4">Slot Attuali</h2>
-    {#if slotsLoading}
-      <p>Caricamento slot...</p>
-    {:else if slotsError}
-      <p class="feedback error">{slotsError}</p>
-    {:else if slots.length > 0}
-      {#each slots as slot}
-        <div class="slot-item">
-          <span class="slot-name">{slot.speakerName || 'Slot libero'}</span>
-          <span class="slot-time">{new Date(slot.startTime).toLocaleTimeString()} - {new Date(slot.endTime).toLocaleTimeString()}</span>
-        </div>
-      {/each}
-    {:else}
-      <p>Nessun slot trovato.</p>
-    {/if}
-  </section>
+  <ListSlot />
 </div>
 
 <style>

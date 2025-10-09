@@ -1,4 +1,3 @@
-// src/routes/api/session/+server.ts
 import { adminAuth } from '$lib/server/admin';
 
 import {

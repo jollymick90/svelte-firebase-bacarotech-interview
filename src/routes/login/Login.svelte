@@ -26,10 +26,13 @@
       // try {
       const idToken = await currentUser.getIdToken(true);
       const email = currentUser.email;
+      
+      const fcmToken = localStorage.getItem('fcm_token');
+      
       const response = await fetch("/api/sync-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ idToken, email }),
+        body: JSON.stringify({ idToken, email, fcmToken  }),
       });
       
       if (response.status >= 300 && response.status <= 308) {        
