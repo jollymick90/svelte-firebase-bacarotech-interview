@@ -1,4 +1,5 @@
 <script>
+  import BroadcastSender from "$lib/components/admin/BroadcastSender.svelte";
   import ListSlot from "$lib/slots/ListSlot.svelte";
 </script>
 
@@ -11,6 +12,8 @@
       href="/app/admin/slots">Aggiungi Slot</a
     >
   </div>
+
+  <BroadcastSender />
 
   <ListSlot />
 </div>

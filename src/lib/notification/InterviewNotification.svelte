@@ -28,8 +28,10 @@
 
         if (currentToken) {
           fcmToken = currentToken;
-          console.log("Token FCM:", currentToken);
-          // Qui dovresti inviare il token al tuo backend per salvarlo
+          
+          localStorage.setItem('fcm_token', currentToken);
+      
+          await saveTokenToServer(currentToken);
         } else {
           console.warn(
             "Nessun token di registrazione disponibile. Richiedi il permesso per generarne uno."
