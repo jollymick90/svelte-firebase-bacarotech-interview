@@ -49,25 +49,6 @@
     }
   }
 
-  async function getAsyncToken() {
-    if (!messaging) return;
-    const currentToken = await getToken(messaging, {
-      vapidKey: env.PUBLIC_CLOUD_MESSAGING_KEY, // Inserisci la chiave VAPID
-    });
-    if (currentToken) {
-      fcmToken = currentToken;
-      
-      localStorage.setItem('fcm_token', currentToken);
-      
-      await saveTokenToServer(currentToken);
-      
-    } else {
-      console.warn(
-        "Nessun token di registrazione disponibile. Richiedi il permesso per generarne uno."
-      );
-      error = "Impossibile ottenere il token. Assicurati di essere su HTTPS.";
-    }
-  }
 
    async function saveTokenToServer(token: string) {
     try {
@@ -93,7 +74,9 @@
 </script>
 
 {#if notificationPermission === "default"}
-  <button onclick={() => requestPermissionAndGetToken()}>
+  <button 
+  class="rounded-md bg-primary-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-primary-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
+  onclick={() => requestPermissionAndGetToken()}>
     Abilita Notifiche
   </button>
 {:else if notificationPermission === "granted"}

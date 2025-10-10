@@ -5,8 +5,8 @@ pulsante cambia stato intervista:
 - problema
 - non si fa
 
-bacarotech-interview
+[done] bacarotech-interview
 
-home: lista interviste
+[done] home: lista interviste
 
 admin
