@@ -145,3 +145,18 @@ export async function POST({ request }) {
         return json({ error: 'Errore del server: ' + e.message }, { status: 500 });
     }
 }
+
+export const DELETE: RequestHandler = async () => {
+	try {
+        const slotsSnapshot = await adminFirestore.collection('slots').get()
+        const count = slotsSnapshot.docs.length;
+        const slotDocRef = adminFirestore.collection('slots').doc();
+        await slotDocRef.delete();        
+		
+		console.log(`Eliminati ${count} slot.`);
+		return json({ message: `Tutti gli slot (${count}) sono stati eliminati con successo.` }, { status: 200 });
+	} catch (error) {
+		console.error("Errore durante l'eliminazione degli slot:", error);
+		return json({ message: 'Errore interno del server.' }, { status: 500 });
+	}
+};

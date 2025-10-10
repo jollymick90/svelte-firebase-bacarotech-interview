@@ -15,3 +15,8 @@ export interface InterviewSlot {
     speakerName: string | null;
     bookedAt: string | null;
 }
+
+export interface UserState {
+    loggedin: boolean;
+    email?: string;
+}

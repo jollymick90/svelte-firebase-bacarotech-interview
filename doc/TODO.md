@@ -10,3 +10,13 @@ pulsante cambia stato intervista:
 [done] home: lista interviste
 
 admin
+
+
+speaker:
+- entro
+- dico di quale speaker voglio essere notificato
+
+admin:
+- reset degli slot (done)
+- configurazioni iniziali: (speaker e slot)
+- modifica di uno slot: cambio speaker

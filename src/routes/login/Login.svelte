@@ -4,12 +4,14 @@
 
   import {
     getAuth,
+    onAuthStateChanged,
     signInWithEmailAndPassword,
     signInWithPopup,
     type UserCredential,
   } from "firebase/auth";
 
   import { goto } from "$app/navigation";
+  import { userState } from "$lib/store/userstore.svelte";
   
   let email = $state("");
   let password = $state("");
@@ -22,7 +24,7 @@
     const currentUser = auth.currentUser;
 
     if (currentUser) {
-      // try {
+      
       const idToken = await currentUser.getIdToken(true);
       const email = currentUser.email;
       
@@ -34,12 +36,14 @@
         body: JSON.stringify({ idToken, email, fcmToken  }),
       });
       
+      userState.loggedin = true;
+      
       if (response.status >= 300 && response.status <= 308) {        
         const locationHeader = response.headers.get("Location");
 
         if (locationHeader) {
           await goto(locationHeader);
-          //window.location.href = locationHeader;
+          
           return;
         }
       }
@@ -54,9 +58,9 @@
 
   async function exchangeTokenForCookie(userCredential: UserCredential) {
     const user = userCredential.user;
-    const idToken = await user.getIdToken(/* forceRefresh */ true);
+    const idToken = await user.getIdToken(true);
 
-    // Invia il token ID al backend SvelteKit (vedi Sezione III-B)
+    
     const response = await fetch("/api/session", {
       method: "POST",
       body: JSON.stringify({ idToken }),
@@ -119,7 +123,7 @@
     handleGoogleLogin().then()
     .catch((e)=> {console.error("error googleLogin", e)});
   }
-  onMount(() => {});
+
 </script>
 
 
