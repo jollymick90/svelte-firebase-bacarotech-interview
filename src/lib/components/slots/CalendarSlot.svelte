@@ -40,6 +40,37 @@
     }
   }
 
+  // ✅ PASSO 2: Crea una variabile derivata per pre-calcolare i dati
+	const processedSlots = $derived(
+		slots.map((slot) => {
+			// Converte i Timestamp di Firestore in oggetti Date una sola volta
+            // NOTA: Firebase passa oggetti Timestamp, non stringhe ISO.
+			const startTimeDate = new Date(slot.startTime);
+			const endTimeDate = new Date(slot.endTime);
+
+			// Calcola tutti i valori necessari qui, una sola volta per slot
+			const startMinutes = startTimeDate.getUTCHours() * 60 + startTimeDate.getUTCMinutes();
+			const endMinutes = endTimeDate.getUTCHours() * 60 + endTimeDate.getUTCMinutes();
+			const durationMinutes = endMinutes - startMinutes;
+			const calendarStartMinutes = calendarStartHour * 60;
+			
+			const calculatedTop = ((startMinutes - calendarStartMinutes) / 60) * hourHeightRem;
+			const calculatedHeight = (durationMinutes / 60) * hourHeightRem;
+			const eventHeight = Math.max(calculatedHeight, minEventHeightRem);
+			const isShortEvent = durationMinutes <= shortEventThresholdMinutes;
+
+			return {
+				...slot, // Mantiene i dati originali dello slot (id, status, ecc.)
+				// Aggiunge i dati pre-calcolati
+				formattedStartTime: formatTime(startTimeDate.toISOString()),
+				formattedEndTime: formatTime(endTimeDate.toISOString()),
+				calculatedTop,
+				eventHeight,
+				isShortEvent
+			};
+		})
+	);
+
   // --- LOGICA DI SCROLL ---
   let scrollContainer: HTMLElement;
 
@@ -105,7 +136,7 @@
       </div>
 
       <div class="absolute top-0 left-12 right-0 h-full">
-        {#each slots as slot (slot.id)}
+        {#each processedSlots as slot (slot.id)}
           {@const startMinutes = dateToMinutes(slot.startTime)}
           {@const endMinutes = dateToMinutes(slot.endTime)}
           {@const calendarStartMinutes = calendarStartHour * 60}

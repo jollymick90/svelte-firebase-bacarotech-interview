@@ -1,4 +1,5 @@
 import { adminFirestore as db } from '$lib/firebase/firebase-admin.server';
+import { Timestamp } from 'firebase-admin/firestore';
 import { v4 as uuidv4 } from 'uuid';
 
 import { json } from '@sveltejs/kit';
@@ -38,8 +39,8 @@ export async function POST({ request }) {
 
       const slotData = {
         id: uuidv4(),
-        startTime: startTime.toISOString(),
-        endTime: endTime.toISOString(),
+        startTime: Timestamp.fromDate(startTime).toMillis(),
+        endTime: Timestamp.fromDate(endTime).toMillis(),
         status: 'AVAILABLE',
         speakerUid: null,
         speakerName: null,

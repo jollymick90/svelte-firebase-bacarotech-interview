@@ -231,12 +231,12 @@ export const fakeSlotBooked = [
 ]
 
 const slotBookedConfig = [
-  
+
 ]
 
-const speakers = [
-  [
- {
+export const speakers = [
+
+  {
     "name": "free"
   },
   {
@@ -305,5 +305,4 @@ const speakers = [
   {
     "name": "Giovanna Galleno Malaga"
   }
-]
 ]

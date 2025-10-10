@@ -3,9 +3,20 @@
   let resetError = $state("");
   let resetSuccess = $state("");
 
+async function initSpeaker () {
+    try {
+        const response = await fetch("/api/speaker", {
+        method: "POST",
+      });
+         const result = await response.json();
+    } catch (error) {
+      console.error("error", error)
+    }
+}
+
   async function asyncReset() {
     try {
-        resetLoading = true;
+      resetLoading = true;
       const response = await fetch("/api/slots", {
         method: "DELETE",
       });
@@ -37,25 +48,34 @@
 </script>
 
 <div class="container">
-<button
-  class="rounded-md bg-primary-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-primary-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
-  onclick={asyncReset}
->
-  Reset Configurazioni
-  {#if resetLoading}
-    reset in corso...
-  {/if}
-</button>
+  <button
+    class="rounded-md bg-primary-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-primary-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
+    onclick={asyncReset}
+  >
+    Reset Configurazioni
+    {#if resetLoading}
+      reset in corso...
+    {/if}
+  </button>
 
-{#if resetSuccess}
-  <div class="feedback success">{resetSuccess}</div>
-{/if}
-{#if resetError}
-  <div class="feedback error">{resetError}</div>
-{/if}
+  {#if resetSuccess}
+    <div class="feedback success">{resetSuccess}</div>
+  {/if}
+  {#if resetError}
+    <div class="feedback error">{resetError}</div>
+  {/if}
+
+  <button
+    class="rounded-md bg-primary-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-primary-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
+    onclick={initSpeaker}
+  >
+    initSpeaker
+    
+  </button>
 </div>
+
 <style>
-      .container {
+  .container {
     max-width: 400px;
     margin: 50px auto;
     padding: 20px;

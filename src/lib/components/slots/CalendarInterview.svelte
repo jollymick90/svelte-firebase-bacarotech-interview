@@ -13,10 +13,34 @@
     try {
       const response = await fetch("/api/slots");
       if (response.ok) {
-        const _slots: InterviewSlot[] = await response.json();
+        debugger
+        let _slots: InterviewSlot[] = await response.json();
+         
+        _slots = _slots.map((slot: any) => {
+          const localStartTime = new Date(slot.startTime);
+          const localEndTime = new Date(slot.endTime);
+
+    // Formatta l'ora per l'Italia
+    const formattedStartTime = localStartTime.toLocaleTimeString('it-IT', {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    const formattedEndTime = localEndTime.toLocaleTimeString('it-IT', {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+          const _slot: InterviewSlot = {
+            ...slot,
+            startTimeString: formattedStartTime,
+            endTimeString: formattedEndTime
+          }
+          return _slot;
+        })
         slots = _slots.filter(
           (slot) => isValid(slot.startTime) && isValid(slot.endTime)
         );
+
+        
         slots.sort(
           (a, b) =>
             new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
