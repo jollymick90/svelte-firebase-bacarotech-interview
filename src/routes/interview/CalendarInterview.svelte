@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { fakeSlotFree } from "$lib/mock/fake-slot";
+  import { fakeSlotFree } from "$lib/config/mock/fake-slot";
   import type { InterviewSlot } from "$lib/type/slots";
   import CardSlot from "./CardSlot.svelte";
   const { slots }: { slots: InterviewSlot[]} = $props();

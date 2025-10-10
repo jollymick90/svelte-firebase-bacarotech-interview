@@ -1,6 +1,6 @@
 <script>
   import BroadcastSender from "$lib/components/admin/BroadcastSender.svelte";
-  import ListSlot from "$lib/slots/ListSlot.svelte";
+  import ListSlot from "$lib/components/slots/ListSlot.svelte";
 </script>
 
 <div class="flex flex-col gap-2">

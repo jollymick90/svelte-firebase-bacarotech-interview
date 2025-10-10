@@ -10,8 +10,7 @@
   } from "firebase/auth";
 
   import { goto } from "$app/navigation";
-  import Background from "$lib/shared/components/Background.svelte";
-
+  
   let email = $state("");
   let password = $state("");
   let message = $state("");
@@ -113,12 +112,12 @@
   }
   function login() {
     handleEmailPasswordLogin().then()
-    .catch((e)=> {console.log("erro loginr", e)});
+    .catch((e)=> {console.error("erro loginr", e)});
   }
 
   function googleLogin(): any {
     handleGoogleLogin().then()
-    .catch((e)=> {console.log("error googleLogin", e)});
+    .catch((e)=> {console.error("error googleLogin", e)});
   }
   onMount(() => {});
 </script>

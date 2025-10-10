@@ -1,4 +1,4 @@
-import { adminFirestore as db } from '$lib/server/admin';
+import { adminFirestore as db } from '$lib/firebase/firebase-admin.server';
 import { v4 as uuidv4 } from 'uuid';
 
 import { json } from '@sveltejs/kit';

@@ -9,7 +9,6 @@
   let fcmToken = "";
   let error: string | null = null;
   async function requestPermissionAndGetToken() {
-    console.log("requestPermissionAndGetToken");
     if (!messaging) {
       return;
     }
@@ -19,11 +18,8 @@
       notificationPermission = permission;
 
       if (permission === "granted") {
-        console.log("Permesso per le notifiche accordato.");
-
-        // Ottenimento del token
         const currentToken = await getToken(messaging, {
-          vapidKey: env.PUBLIC_CLOUD_MESSAGING_KEY, // Inserisci la chiave VAPID
+          vapidKey: env.PUBLIC_CLOUD_MESSAGING_KEY, 
         });
 
         if (currentToken) {

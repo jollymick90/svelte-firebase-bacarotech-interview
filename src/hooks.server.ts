@@ -1,5 +1,5 @@
 // src/hooks.server.ts
-import { adminAuth } from '$lib/server/admin';
+import { adminAuth } from '$lib/firebase/firebase-admin.server';
 
 import type { Handle } from '@sveltejs/kit';
 

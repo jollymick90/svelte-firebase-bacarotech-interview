@@ -1,4 +1,4 @@
-import { adminFirestore as adminDB } from '$lib/server/admin';
+import { adminFirestore as adminDB } from '$lib/firebase/firebase-admin.server';
 import {
   getMessaging,
   type Message,
@@ -26,7 +26,6 @@ export async function POST({ request }) {
             throw error(400, 'Titolo e messaggio non validi o mancanti');
         }
 
-        // 1. Recupera tutti i token da Firestore
         const tokensSnapshot = await adminDB.collection('fcm_tokens').get();
         if (tokensSnapshot.empty) {
             return json({ success: true, message: "Nessun token a cui inviare la notifica." });
@@ -54,18 +53,8 @@ export async function POST({ request }) {
                     title
                 }
             }
-
         }))
-        // 2. Prepara il messaggio da inviare
-        const notificationPayload = {
-            notification: {
-                title: title, // es. "Annuncio importante"
-                body: message, // es. "La manutenzione è programmata per domani."
-            },
-            // Puoi aggiungere anche un'icona, un suono, etc.
-        };
 
-        // 3. Invia la notifica a tutti i token in un colpo solo (multicast)
         const messaging = getMessaging();
         const response = await messaging.sendEach(messages);
 
@@ -74,7 +63,6 @@ export async function POST({ request }) {
             const error = result.error;
             if (error) {
                 console.warn('Invio fallito al token:', tokens[index], error);
-                // Se il token non è più valido, lo aggiungiamo alla lista per la pulizia
                 if (
                     error.code === 'messaging/invalid-registration-token' ||
                     error.code === 'messaging/registration-token-not-registered'
@@ -84,9 +72,7 @@ export async function POST({ request }) {
             }
         });
 
-        // 4. (Opzionale ma consigliato) Rimuovi i token non validi dal database
         if (failedTokens.length > 0) {
-            console.log(`Rimozione di ${failedTokens.length} token non validi...`);
             const batch = adminDB.batch();
             failedTokens.forEach(token => {
                 const tokenRef = adminDB.collection('fcm_tokens').doc(token);

@@ -2,7 +2,7 @@ import { ADMIN_EMAILS_LIST } from '$env/static/private';
 import {
   adminAuth,
   adminFirestore,
-} from '$lib/server/admin';
+} from '$lib/firebase/firebase-admin.server';
 
 import {
   json,

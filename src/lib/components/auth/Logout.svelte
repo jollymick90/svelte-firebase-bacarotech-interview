@@ -14,14 +14,8 @@
     error = null;
 
     try {
-      // 1. Esegue il logout da Firebase.
-      // Questa singola funzione gestisce tutti i provider (Google, Email, etc.)
       await signOut(authClient);
 
-      console.log("Logout effettuato con successo!");
-
-      // 2. Reindirizza l'utente alla homepage dopo il logout.
-      // 'goto' è il modo corretto per navigare in SvelteKit.
       await goto("/");
 
     } catch (err) {

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import ListSlot from "$lib/slots/ListSlot.svelte";
+  import ListSlot from "$lib/components/slots/ListSlot.svelte";
 
   let name = $state("free");
   let startTime = $state("");

@@ -1,4 +1,4 @@
-import { adminFirestore } from '$lib/server/admin';
+import { adminFirestore } from '$lib/firebase/firebase-admin.server';
 import type {
   InterviewSlot,
   SpeakerDetails,

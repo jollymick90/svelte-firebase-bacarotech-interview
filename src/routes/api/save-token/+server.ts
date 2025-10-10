@@ -1,4 +1,4 @@
-import { adminFirestore as adminDB } from '$lib/server/admin';
+import { adminFirestore as adminDB } from '$lib/firebase/firebase-admin.server';
 import { FieldValue } from 'firebase-admin/firestore';
 
 import {

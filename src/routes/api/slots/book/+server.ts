@@ -1,4 +1,4 @@
-import { adminFirestore as db } from '$lib/server/admin';
+import { adminFirestore as db } from '$lib/firebase/firebase-admin.server';
 
 // src/routes/api/book-slot/[id]/+server.ts
 import { json } from '@sveltejs/kit';

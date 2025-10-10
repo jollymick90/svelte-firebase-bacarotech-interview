@@ -1,4 +1,4 @@
-import { adminAuth } from '$lib/server/admin';
+import { adminAuth } from '$lib/firebase/firebase-admin.server';
 
 import {
   error,
