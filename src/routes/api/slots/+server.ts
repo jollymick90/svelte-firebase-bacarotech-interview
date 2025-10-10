@@ -145,14 +145,41 @@ export async function POST({ request }) {
         return json({ error: 'Errore del server: ' + e.message }, { status: 500 });
     }
 }
+async function deleteCollection(collectionPath: string, batchSize: number) {
+	const collectionRef = adminFirestore.collection(collectionPath);
+	const query = collectionRef.orderBy('__name__').limit(batchSize);
 
+	return new Promise((resolve, reject) => {
+		deleteQueryBatch(query, resolve).catch(reject);
+	});
+}
+
+async function deleteQueryBatch(query: FirebaseFirestore.Query, resolve: (value?: unknown) => void) {
+	const snapshot = await query.get();
+
+	if (snapshot.size === 0) {
+		resolve();
+		return;
+	}
+
+	const batch = adminFirestore.batch();
+	snapshot.docs.forEach((doc) => {
+		batch.delete(doc.ref);
+	});
+	await batch.commit();
+
+	process.nextTick(() => {
+		deleteQueryBatch(query, resolve);
+	});
+}
 export const DELETE: RequestHandler = async () => {
 	try {
+        
+        console.log("deleting....")
         const slotsSnapshot = await adminFirestore.collection('slots').get()
         const count = slotsSnapshot.docs.length;
-        const slotDocRef = adminFirestore.collection('slots').doc();
-        await slotDocRef.delete();        
-		
+        await deleteCollection('slots', 500); 
+      		
 		console.log(`Eliminati ${count} slot.`);
 		return json({ message: `Tutti gli slot (${count}) sono stati eliminati con successo.` }, { status: 200 });
 	} catch (error) {

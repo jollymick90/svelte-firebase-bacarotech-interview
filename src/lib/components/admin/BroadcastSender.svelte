@@ -40,7 +40,7 @@
   }
 </script>
 
-<div class="broadcast-container">
+<div class="w-full broadcast-container">
   <h3>Invia Notifica a Tutti gli Utenti</h3>
   
   <div class="form-group">
@@ -65,7 +65,7 @@
     ></textarea>
   </div>
   
-  <button on:click={sendBroadcast} disabled={isLoading}>
+  <button onclick={sendBroadcast} disabled={isLoading}>
     {isLoading ? 'Invio in corso...' : 'Invia Notifica Broadcast'}
   </button>
 
@@ -80,7 +80,7 @@
   .broadcast-container {
     max-width: 500px;
     padding: 20px;
-    border: 1px solid #ccc;
+    border: 0px solid #ccc;
     border-radius: 8px;
     display: flex;
     flex-direction: column;

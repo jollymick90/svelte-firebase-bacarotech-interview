@@ -12,7 +12,10 @@ import {
 } from 'firebase/auth';
 import type { Firestore } from 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore';
-import { getMessaging, type Messaging } from 'firebase/messaging';
+import {
+  getMessaging,
+  type Messaging,
+} from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: env.PUBLIC_FIREBASE_ADMIN_KEY,

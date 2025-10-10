@@ -1,10 +1,9 @@
 <script lang="ts">
   import type { InterviewSlot } from "$lib/type/slots";
   import { onMount } from "svelte";
-  import CardSlot from "./CardSlot.svelte";
+
   import CalendarSlot from "./CalendarSlot.svelte";
-  const calendarStartHour = 8;
-  const calendarEndHour = 19;
+
   let slots = $state([] as InterviewSlot[]);
   let slotsLoading = $state(true);
   let slotsError = $state("");
@@ -92,4 +91,6 @@
   }
 </script>
 
-<CalendarSlot {slots} />
+<div class="w-full">
+  <CalendarSlot {slots} />
+</div>
