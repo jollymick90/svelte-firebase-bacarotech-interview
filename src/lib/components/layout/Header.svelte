@@ -11,6 +11,8 @@
     <div class="flex lg:flex-1">
       <img src={icon} alt="bacaroicon" class="h-10 w-auto" />
     </div>
+    
+    <span class="ml-2 text-secondary-400 text-xl">Bacaro Interview</span>
 
     <InterviewNotification />
     <a

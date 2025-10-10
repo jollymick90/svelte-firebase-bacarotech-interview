@@ -1,94 +1,96 @@
 [
-  {
+ {
     "time": "9:45",
     "name": "free"
   },
   {
     "time": "10:00",
-    "name": "free"
+    "name": "Istvan Juhos"
   },
   {
     "time": "10:15",
-    "name": "free"
+    "name": "Matteo Valerio"
   },
   {
     "time": "10:30",
-    "name": "free"
+    "name": "Piero Dotti"
   },
   {
     "time": "10:45",
-    "name": "free"
+    "name": "Julien Salvi"
   },
   {
     "time": "11:00",
-    "name": "free"
+    "name": "Emanuele Maso"
   },
   {
     "time": "11:15",
-    "name": "free"
+    "name": "Vadym Pinchuk"
   },
   {
     "time": "11:30",
-    "name": "free"
+    "name": "Luca Raveri"
   },
   {
     "time": "11:45",
-    "name": "free"
+    "name": "Giorgio Galassi"
   },
   {
     "time": "12:00",
-    "name": "free"
+    "name": "Mattia Cintura"
   },
   {
     "time": "12:15",
-    "name": "free"
+    "name": "Fabrizio Mele"
   },
   {
     "time": "12:30",
-    "name": "free"
+    "name": "Natalie Godec"
   },
   {
     "time": "14:25",
-    "name": "free"
+    "name": "Jad Joubran"
   },
   {
     "time": "14:40",
-    "name": "free"
+    "name": "Andrea Della Porta"
   },
   {
     "time": "14:55",
-    "name": "free"
+    "name": "Maurizio Ipsale"
   },
   {
     "time": "15:10",
-    "name": "free"
+    "name": "Henry Lim"
   },
   {
     "time": "15:25",
-    "name": "free"
+    "name": "Matthias Geisler"
   },
   {
     "time": "16:10",
-    "name": "free"
+    "name": "Davide Passafaro"
   },
   {
     "time": "16:25",
-    "name": "free"
+    "name": "Alessandro Pezzato"
   },
   {
     "time": "16:40",
-    "name": "free"
+    "name": "Riccardo Carretta"
   },
   {
     "time": "16:55",
-    "name": "free"
+    "name": "Andrea Manzini"
   },
   {
     "time": "17:10",
-    "name": "free"
+    "name": "Luca del Puppo"
   },
   {
     "time": "17:25",
-    "name": "free"
+    "name": "Giovanna Galleno Malaga"
   }
 ]
+
+
