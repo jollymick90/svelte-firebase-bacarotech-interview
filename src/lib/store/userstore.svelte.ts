@@ -8,7 +8,10 @@ export const userState: UserState = $state({ loggedin: false });
 if (browser) {
  onAuthStateChanged(authClient, (firebaseUser) => {
       console.log("User", firebaseUser);
-      if (firebaseUser) userState.loggedin = true;
+      if (firebaseUser) {
+        userState.loggedin = true;
+        userState.email = firebaseUser.email;
+      }
       else userState.loggedin = false;
     });
 }

@@ -4,9 +4,11 @@
 
   import {
     getAuth,
+    getRedirectResult,
     onAuthStateChanged,
     signInWithEmailAndPassword,
     signInWithPopup,
+    signInWithRedirect,
     type UserCredential,
   } from "firebase/auth";
 
@@ -101,6 +103,7 @@
     error = null;
     try {
       const userCredential = await signInWithPopup(authClient, googleProvider);
+      // const userCredential = await signInWithRedirect(authClient, googleProvider);
 
       await exchangeTokenForCookie(userCredential);
 
@@ -123,6 +126,8 @@
     handleGoogleLogin().then()
     .catch((e)=> {console.error("error googleLogin", e)});
   }
+
+
 
 </script>
 

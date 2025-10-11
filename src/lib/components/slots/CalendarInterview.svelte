@@ -13,7 +13,6 @@
     try {
       const response = await fetch("/api/slots");
       if (response.ok) {
-        debugger
         let _slots: InterviewSlot[] = await response.json();
          
         _slots = _slots.map((slot: any) => {

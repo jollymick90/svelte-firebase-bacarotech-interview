@@ -18,5 +18,5 @@ export interface InterviewSlot {
 
 export interface UserState {
     loggedin: boolean;
-    email?: string;
+    email?: string | null;
 }

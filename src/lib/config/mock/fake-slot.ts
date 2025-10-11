@@ -235,10 +235,6 @@ const slotBookedConfig = [
 ]
 
 export const speakers = [
-
-  {
-    "name": "free"
-  },
   {
     "name": "Istvan Juhos"
   },

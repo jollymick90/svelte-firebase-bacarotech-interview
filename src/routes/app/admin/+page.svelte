@@ -4,7 +4,7 @@
 </script>
 
 <div class="w-full flex flex-col gap-5 items-center px-2">
-  <h1 class="">Admin Page</h1>
+  <h1 class="dark:text-secondary-200">Admin Page</h1>
 
   <div class="flex gap-2 flex-wrap">
     <a
@@ -17,7 +17,7 @@
     >
   </div>
 
-  <h1 class="">Lista Slot</h1>
+  <h1 class="dark:text-secondary-200">Lista Slot</h1>
   <div class="w-full">
     <CalendarInterview />
   </div>
