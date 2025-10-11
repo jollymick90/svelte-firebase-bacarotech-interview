@@ -1,18 +1,119 @@
 <script lang="ts">
+  import { fakeSlotBooked } from "$lib/config/mock/fake-slot";
+  import type { InterviewSlot, SpeakerDetails } from "$lib/type/slots";
+
   let resetLoading = $state(false);
   let resetError = $state("");
   let resetSuccess = $state("");
+	let isLoading = $state(false);
+	let feedbackMessage: { type: 'success' | 'error'; text: string } | null = $state(null);
 
-async function initSpeaker () {
+  async function freeSlot() {
     try {
-        const response = await fetch("/api/speaker", {
+      const response = await fetch("/api/slots/reset-all", {
         method: "POST",
       });
-         const result = await response.json();
     } catch (error) {
-      console.error("error", error)
+      
     }
+  }
+async function initSpeaker () {
+    await assignAllSpeakers()
 }
+
+	async function assignAllSpeakers() {
+		// isLoading = true;
+		// feedbackMessage = null;
+		let successfulAssignments = 0;
+		let failedAssignments = 0;
+
+		try {
+			// --- 1. Recupera speaker e slot in parallelo ---
+			const [speakersResponse, slotsResponse] = await Promise.all([
+				fetch('/api/speaker'),
+				fetch('/api/slots')
+			]);
+
+			if (!speakersResponse.ok || !slotsResponse.ok) {
+				throw new Error('Errore nel recupero dei dati iniziali.');
+			}
+
+
+			const speakers: SpeakerDetails[] = await speakersResponse.json();
+			const slots: InterviewSlot[] = (await slotsResponse.json());
+     
+
+ slots.sort(
+          (a, b) =>
+            new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+        );
+         const availableSlots = slots.filter(
+				(s: any) => s.status === 'AVAILABLE'
+			);
+      for (const s of slots) {
+        const slotTimeLocale = new Date(s.startTime).toLocaleTimeString('it-IT', {
+						hour: '2-digit',
+						minute: '2-digit'
+					});
+           const slotTime = new Date(s.startTime).toISOString();
+        console.log("s",  new Date(s.startTime), slotTime)
+      }
+			const updatePromises = [];
+
+			// --- 2. Itera sulla lista di assegnazioni e crea le richieste di aggiornamento ---
+			for (const assignment of fakeSlotBooked) {
+				// Trova lo speaker corrispondente
+				const speaker = speakers.find((s) => s.name === assignment.name);
+
+				// Trova lo slot corrispondente formattando l'ora
+				const slot = availableSlots.find((s) => {
+          
+					const slotTime = new Date(s.startTime).toLocaleTimeString('it-IT', {
+						hour: '2-digit',
+						minute: '2-digit'
+					});
+          // console.log("slotTime",slotTime, new Date(s.startTime))
+					return slotTime === assignment.time;
+				});
+          // console.log("slotTime", slot)
+
+				if (speaker && slot) {
+					// Prepara la chiamata all'API PATCH ma non eseguirla ancora
+					const promise = fetch('/api/slots/associate', {
+						method: 'PATCH',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({
+							slotId: slot.docId,
+							speakerId: speaker.docId,
+							speakerName: speaker.name
+						})
+					}).then((res) => {
+						if (res.ok) successfulAssignments++;
+						else failedAssignments++;
+						return res.json();
+					});
+					updatePromises.push(promise);
+				} else {
+					console.warn(`Nessuna corrispondenza trovata per: ${assignment.name} alle ${assignment.time}`);
+					failedAssignments++;
+				}
+			}
+
+			// --- 3. Esegui tutte le richieste di aggiornamento in parallelo ---
+			// if (updatePromises.length > 0) {
+			// 	await Promise.all(updatePromises);
+			// }
+
+			feedbackMessage = {
+				type: 'success',
+				text: `Processo completato! Assegnazioni riuscite: ${successfulAssignments}, Fallite: ${failedAssignments}.`
+			};
+		} catch (err: any) {
+			feedbackMessage = { type: 'error', text: err.message };
+		} finally {
+			isLoading = false;
+		}
+	}
 
   async function asyncReset() {
     try {
@@ -70,6 +171,13 @@ async function initSpeaker () {
     onclick={initSpeaker}
   >
     initSpeaker
+    
+  </button>
+    <button
+    class="rounded-md bg-primary-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-primary-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
+    onclick={freeSlot}
+  >
+    Free Slot
     
   </button>
 </div>
