@@ -15,7 +15,6 @@
       return;
     }
     try {
-      // Richiesta del permesso
       const permission = await Notification.requestPermission();
       notificationPermission = permission;
 

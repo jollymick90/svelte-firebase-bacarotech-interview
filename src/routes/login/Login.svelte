@@ -1,14 +1,10 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { authClient, googleProvider } from "$lib/firebase/firebase.client";
 
   import {
     getAuth,
-    getRedirectResult,
-    onAuthStateChanged,
     signInWithEmailAndPassword,
     signInWithPopup,
-    signInWithRedirect,
     type UserCredential,
   } from "firebase/auth";
 

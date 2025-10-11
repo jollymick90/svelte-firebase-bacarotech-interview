@@ -1,7 +1,9 @@
 <script lang="ts">
   import { speakers } from "$lib/config/mock/fake-slot";
+  import type { SpeakerDetails } from "$lib/type/slots";
+  import { onMount } from "svelte";
 
-  const speakerList = $state(speakers);
+  let speakerList: SpeakerDetails[] = $state([]);
   let selectedSpeaker = $state("");
   const communications = $state([
     {
@@ -33,29 +35,35 @@
   let feedback: { type: "success" | "error"; text: string } | null =
     $state(null);
 
-  // NUOVA FUNZIONE: Viene chiamata ogni volta che una delle due select cambia.
   function populateFields() {
-    // Se non è stato selezionato un messaggio, non fare nulla.
     if (selectedCommunicationId === null) {
-      // Opzionale: puoi svuotare i campi se vuoi
       // title = "";
       // message = "";
       return;
     }
 
-    // Trova l'oggetto comunicazione completo usando l'ID selezionato.
     const selectedComm = communications.find(
       (c) => c.id === selectedCommunicationId
     );
 
     if (selectedComm) {
-      // Prepopola i campi `title` e `message`. Da questo momento, l'utente
-      // può modificarli liberamente perché non c'è un legame reattivo continuo.
       title = selectedComm.title.replaceAll('[NAME]', selectedSpeaker);
       message = selectedComm.message.replaceAll('[NAME]', selectedSpeaker);
     }
   }
 
+  async function fetchSpeaker() {
+    try {
+      const response = await fetch("/api/speaker");
+      if (response.ok) {
+        let speakers: SpeakerDetails[] = await response.json();
+     speakerList = 
+     speakers.filter((s) => s.name && s.name !== 'free' && s.name !== '')
+     .sort((a,b) => a.name.localeCompare(b.name));
+
+      }
+    } catch (error) {}
+  }
   async function sendBroadcast() {
     if (!title.trim() || !message.trim()) {
       feedback = {
@@ -95,6 +103,10 @@
       isLoading = false;
     }
   }
+
+  onMount(() => {
+    fetchSpeaker();
+  })
 </script>
 
 <div class="mt-3 w-full flex flex-col items-center">

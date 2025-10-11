@@ -1,6 +1,6 @@
 // 1. Definizione dei tipi per chiarezza
 export interface SpeakerDetails {
-    uid: string;
+    docId: string;
     name: string;
 }
 
